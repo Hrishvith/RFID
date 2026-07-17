@@ -35,9 +35,11 @@ export async function apiRequest(action) {
 
 }
 
-// Local Express auth server (see /server) - handles register/login/OTP
-// against real, bcrypt-hashed, persisted user accounts.
-const AUTH_API_BASE_URL = "http://localhost:4000/api";
+// Express auth server (see /server) - handles register/login/OTP against
+// real, bcrypt-hashed, persisted user accounts. Set VITE_AUTH_API_URL in
+// production (e.g. your Render URL + "/api"); falls back to the local dev
+// server otherwise.
+const AUTH_API_BASE_URL = import.meta.env.VITE_AUTH_API_URL || "http://localhost:4000/api";
 
 /**
  * Makes requests to the local Express auth server.
