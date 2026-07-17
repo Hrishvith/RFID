@@ -1,0 +1,8 @@
+[
+  { "code": "CSE", "name": "Computer Science & Engineering" },
+  { "code": "ISE", "name": "Information Science & Engineering" },
+  { "code": "ECE", "name": "Electronics & Communication Engineering" },
+  { "code": "EEE", "name": "Electrical & Electronics Engineering" },
+  { "code": "MECH", "name": "Mechanical Engineering" },
+  { "code": "CIVIL", "name": "Civil Engineering" }
+]

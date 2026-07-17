@@ -1,0 +1,35 @@
+[
+  {
+    "id": "f3fa465a-8363-4a00-9492-a93e02d38d70",
+    "name": "Hrishvith C",
+    "email": "hrishvith@gmail.com",
+    "passwordHash": "$2b$10$DIW/s3tWGpwJA97XEZ3XGON3SSahFIVoYKJxKUkY0wvp9Mn0c1eo.",
+    "role": "Administrator",
+    "department": null,
+    "phone": null,
+    "avatar": null,
+    "createdAt": "2026-07-11T06:57:41.372Z"
+  },
+  {
+    "id": "08821005-604e-46fc-84da-41aa5036f180",
+    "name": "yash",
+    "email": "yashwanth89710@gmail.com",
+    "passwordHash": "$2b$10$AAxMQvnvE6k9wwr5sr1UOuLcw9EzO1lgPeALbazJDRro8sHD9OFya",
+    "role": "User",
+    "department": null,
+    "phone": null,
+    "avatar": null,
+    "createdAt": "2026-07-16T11:53:21.912Z"
+  },
+  {
+    "id": "e6bba5f3-abe3-4d8e-8f63-4ce8bc397d11",
+    "name": "yashwanth",
+    "email": "gowdayash334@gmail.com",
+    "passwordHash": "$2b$10$YnZWnwfsOKvZzx8O1Wsw8.PXKQ9Fb224pwBX0UoihVrh/hl.jSKVa",
+    "role": "User",
+    "department": null,
+    "phone": null,
+    "avatar": null,
+    "createdAt": "2026-07-17T02:23:37.418Z"
+  }
+]

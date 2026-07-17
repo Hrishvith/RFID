@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "Low attendance alert",
+    "message": "5 students have attendance below 75% this month.",
+    "type": "warning",
+    "time": "10 min ago",
+    "read": false
+  },
+  {
+    "id": 2,
+    "title": "New RFID scan device linked",
+    "message": "ESP32 reader \"Gate-A\" connected successfully.",
+    "type": "success",
+    "time": "1 hour ago",
+    "read": false
+  },
+  {
+    "id": 3,
+    "title": "Sheet sync completed",
+    "message": "Google Sheets attendance log synced for today.",
+    "type": "info",
+    "time": "3 hours ago",
+    "read": false
+  },
+  {
+    "id": 4,
+    "title": "Weekly report ready",
+    "message": "Your weekly attendance report has been generated.",
+    "type": "info",
+    "time": "Yesterday",
+    "read": true
+  },
+  {
+    "id": 5,
+    "title": "Unknown UID scanned",
+    "message": "UID 9F21A0B3 is not registered to any student.",
+    "type": "error",
+    "time": "2 days ago",
+    "read": true
+  }
+]

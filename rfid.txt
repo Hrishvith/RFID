@@ -1,0 +1,404 @@
+You are a Senior Full Stack Engineer and UI/UX Designer.
+
+I am building an IoT Smart RFID Attendance System.
+
+This prompt is ONLY for developing the frontend dashboard.
+
+DO NOT implement backend APIs yet.
+DO NOT use Firebase.
+DO NOT use MySQL.
+DO NOT use Spring Boot.
+
+The dashboard must be built in such a way that it can later be integrated easily with:
+
+ESP32
+↓
+
+Google Apps Script (HTTP POST)
+
+↓
+
+Google Sheets
+
+↓
+
+Dashboard
+
+For now, use MOCK DATA only.
+
+====================================================
+TECH STACK
+====================================================
+
+React (Vite)
+
+TailwindCSS
+
+shadcn/ui
+
+React Router
+
+Chart.js (or Recharts)
+
+Lucide Icons
+
+Responsive Design
+
+Modern UI
+
+====================================================
+PROJECT STRUCTURE
+====================================================
+
+Create a scalable folder structure.
+
+src/
+
+components/
+
+pages/
+
+layouts/
+
+hooks/
+
+context/
+
+services/
+
+utils/
+
+assets/
+
+types/
+
+data/
+
+App.jsx
+
+main.jsx
+
+====================================================
+THEME
+====================================================
+
+Professional
+
+Minimal
+
+Modern
+
+Clean
+
+White + Blue
+
+Rounded Cards
+
+Soft Shadows
+
+Animated
+
+Responsive
+
+Dark Mode Support
+
+====================================================
+DASHBOARD PAGES
+====================================================
+
+1. Login Page
+
+Simple Admin Login UI
+
+Username
+
+Password
+
+Remember Me
+
+Forgot Password UI
+
+(No backend authentication)
+
+----------------------------------------------------
+
+2. Dashboard
+
+Display:
+
+Total Registered Students
+
+Present Today
+
+Absent Today
+
+Attendance Percentage
+
+Recent RFID Scans
+
+Current Date
+
+Current Time
+
+Recent Activity
+
+Quick Statistics
+
+Cards should be animated.
+
+----------------------------------------------------
+
+3. Students Page
+
+Display Student List
+
+Columns
+
+Photo
+
+Name
+
+USN
+
+Department
+
+Year
+
+RFID UID
+
+Status
+
+Search Student
+
+Sort Student
+
+Pagination
+
+----------------------------------------------------
+
+4. Attendance Page
+
+Display attendance table
+
+Columns
+
+Date
+
+Time
+
+Student Name
+
+USN
+
+UID
+
+Status
+
+Search
+
+Filter
+
+Export Button (UI only)
+
+----------------------------------------------------
+
+5. Reports Page
+
+Daily Report
+
+Weekly Report
+
+Monthly Report
+
+Charts
+
+Attendance %
+
+Present vs Absent
+
+Top Attendance
+
+Lowest Attendance
+
+----------------------------------------------------
+
+6. Settings
+
+Institute Name
+
+Semester
+
+Department
+
+Attendance Time
+
+Theme
+
+Profile
+
+====================================================
+MOCK DATA
+====================================================
+
+Create mock data using JSON.
+
+Example
+
+students
+
+[
+{
+id:1,
+name:"Rahul Rabinal",
+usn:"22EC001",
+department:"ECE",
+year:"M.Tech",
+uid:"04A29134",
+status:"Present"
+}
+]
+
+attendance
+
+[
+{
+date:"10-07-2026",
+time:"09:10 AM",
+uid:"04A29134",
+name:"Rahul Rabinal",
+status:"Present"
+}
+]
+
+====================================================
+IMPORTANT
+
+Separate ALL mock data into
+
+/data
+
+Never hardcode inside components.
+
+====================================================
+COMPONENTS
+====================================================
+
+Navbar
+
+Sidebar
+
+Header
+
+Footer
+
+Stat Cards
+
+Attendance Table
+
+Student Table
+
+Charts
+
+Search Bar
+
+Profile Card
+
+Notification Bell
+
+Theme Switch
+
+Breadcrumb
+
+====================================================
+CHARTS
+====================================================
+
+Attendance %
+
+Weekly Attendance
+
+Monthly Attendance
+
+Department-wise Attendance
+
+Present vs Absent
+
+====================================================
+RESPONSIVE
+====================================================
+
+Desktop
+
+Laptop
+
+Tablet
+
+Mobile
+
+====================================================
+IMPORTANT FUTURE INTEGRATION
+
+Design every table and component so that later data can be fetched from a REST endpoint.
+
+For example
+
+const students = await fetch("/students")
+
+instead of directly depending on Google Sheets.
+
+Create a service layer
+
+/services
+
+studentService.js
+
+attendanceService.js
+
+Currently these services should return mock JSON.
+
+Later they will be replaced with Google Apps Script API.
+
+====================================================
+EXPECTED CODE QUALITY
+
+Reusable Components
+
+SOLID Principles
+
+Clean Code
+
+Type-safe structure
+
+No duplicated code
+
+Professional naming conventions
+
+Production-ready folder structure
+
+====================================================
+DELIVERABLES
+
+Generate the complete React project.
+
+Generate every component.
+
+Generate every page.
+
+Generate routing.
+
+Generate mock data.
+
+Generate charts.
+
+Generate beautiful UI.
+
+Generate responsive layouts.
+
+Generate reusable services.
+
+Generate README.
+
+Do NOT skip files.
+
+Generate the project exactly as if it were being delivered to a client.
+preparea good looking dashboard visually very good looking 

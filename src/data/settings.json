@@ -1,0 +1,14 @@
+{
+  "instituteName": "Dr. Ambedkar Institute of Technology",
+  "instituteCode": "DRAIT",
+  "semester": "Even Semester 2025-26",
+  "department": "Electronics & Communication Engineering",
+  "attendanceStartTime": "08:45",
+  "attendanceEndTime": "09:15",
+  "lateMarkAfter": "09:15",
+  "theme": "system",
+  "academicYear": "2025-2026",
+  "address": "Bengaluru, Karnataka, India",
+  "contactEmail": "admin@drait.edu.in",
+  "contactPhone": "+91 80 4000 1234"
+}
