@@ -22,6 +22,11 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   family: 4,
+  // `family: 4` and dns.setDefaultResultOrder above aren't always enough to
+  // keep nodemailer's direct-TLS connection off IPv6 - on hosts with no
+  // outbound IPv6 route (e.g. Render) it can still pick an AAAA record and
+  // fail with ENETUNREACH. Force the lookup itself to IPv4-only.
+  lookup: (hostname, options, callback) => dns.lookup(hostname, { family: 4 }, callback),
   auth: {
     user: GMAIL_USER,
     pass: GMAIL_APP_PASSWORD,
