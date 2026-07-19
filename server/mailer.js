@@ -19,18 +19,26 @@ if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  // 587 (STARTTLS) instead of 465 (implicit TLS) - some hosts that
+  // silently block outbound 465 still allow 587.
+  port: 587,
+  secure: false,
+  requireTLS: true,
   family: 4,
   // `family: 4` and dns.setDefaultResultOrder above aren't always enough to
-  // keep nodemailer's direct-TLS connection off IPv6 - on hosts with no
-  // outbound IPv6 route (e.g. Render) it can still pick an AAAA record and
-  // fail with ENETUNREACH. Force the lookup itself to IPv4-only.
+  // keep nodemailer's connection off IPv6 - on hosts with no outbound IPv6
+  // route (e.g. Render) it can still pick an AAAA record and fail with
+  // ENETUNREACH. Force the lookup itself to IPv4-only.
   lookup: (hostname, options, callback) => dns.lookup(hostname, { family: 4 }, callback),
   auth: {
     user: GMAIL_USER,
     pass: GMAIL_APP_PASSWORD,
   },
+  // Fail fast instead of hanging on a host that silently drops (rather than
+  // rejects) outbound SMTP connections.
+  connectionTimeout: 15_000,
+  greetingTimeout: 15_000,
+  socketTimeout: 15_000,
   // This host's network intercepts outbound TLS with its own certificate,
   // which fails standard chain verification against Gmail's real cert.
   // Local-dev-only workaround - do not disable this in a real deployment.
