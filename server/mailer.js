@@ -1,68 +1,48 @@
-import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import dns from "dns";
 
 dotenv.config();
 
-// This host's network can't route outbound IPv6, but Node's default DNS
-// order can still hand back an IPv6 address for smtp.gmail.com first,
-// which then fails with ECONNREFUSED. Prefer IPv4 results.
-dns.setDefaultResultOrder("ipv4first");
+// Render blocks all outbound SMTP traffic (both port 465 and 587 hang until
+// timeout, regardless of DNS/IPv4 fixes), so OTP emails go through Resend's
+// HTTP API instead - plain HTTPS, which isn't blocked.
+const { RESEND_API_KEY, RESEND_FROM_EMAIL } = process.env;
 
-const { GMAIL_USER, GMAIL_APP_PASSWORD } = process.env;
-
-if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+if (!RESEND_API_KEY) {
   console.warn(
-    "[mock-api] GMAIL_USER / GMAIL_APP_PASSWORD are not set in .env - OTP emails will fail to send."
+    "[mock-api] RESEND_API_KEY is not set in .env - OTP emails will fail to send."
   );
 }
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  // 587 (STARTTLS) instead of 465 (implicit TLS) - some hosts that
-  // silently block outbound 465 still allow 587.
-  port: 587,
-  secure: false,
-  requireTLS: true,
-  family: 4,
-  // `family: 4` and dns.setDefaultResultOrder above aren't always enough to
-  // keep nodemailer's connection off IPv6 - on hosts with no outbound IPv6
-  // route (e.g. Render) it can still pick an AAAA record and fail with
-  // ENETUNREACH. Force the lookup itself to IPv4-only.
-  lookup: (hostname, options, callback) => dns.lookup(hostname, { family: 4 }, callback),
-  auth: {
-    user: GMAIL_USER,
-    pass: GMAIL_APP_PASSWORD,
-  },
-  // Fail fast instead of hanging on a host that silently drops (rather than
-  // rejects) outbound SMTP connections.
-  connectionTimeout: 15_000,
-  greetingTimeout: 15_000,
-  socketTimeout: 15_000,
-  // This host's network intercepts outbound TLS with its own certificate,
-  // which fails standard chain verification against Gmail's real cert.
-  // Local-dev-only workaround - do not disable this in a real deployment.
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+const FROM_EMAIL = RESEND_FROM_EMAIL || "RFID Smart Attendance <onboarding@resend.dev>";
 
 /**
  * @param {string} to
  * @param {string} otp
  */
 export async function sendOtpEmail(to, otp) {
-  await transporter.sendMail({
-    from: `"RFID Smart Attendance" <${GMAIL_USER}>`,
-    to,
-    subject: `${otp} is your RFID Attendance verification code`,
-    text: `Your verification code is ${otp}. It expires in 10 minutes.`,
-    html: `
-      <div style="font-family: system-ui, sans-serif; max-width: 420px; margin: 0 auto;">
-        <p style="color:#0f172a; font-size:15px;">Use the code below to verify your RFID Attendance account:</p>
-        <p style="font-size:32px; font-weight:700; letter-spacing:6px; color:#2563eb; margin:20px 0;">${otp}</p>
-        <p style="color:#64748b; font-size:13px;">This code expires in 10 minutes. If you didn't request this, you can ignore this email.</p>
-      </div>
-    `,
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: FROM_EMAIL,
+      to,
+      subject: `${otp} is your RFID Attendance verification code`,
+      text: `Your verification code is ${otp}. It expires in 10 minutes.`,
+      html: `
+        <div style="font-family: system-ui, sans-serif; max-width: 420px; margin: 0 auto;">
+          <p style="color:#0f172a; font-size:15px;">Use the code below to verify your RFID Attendance account:</p>
+          <p style="font-size:32px; font-weight:700; letter-spacing:6px; color:#2563eb; margin:20px 0;">${otp}</p>
+          <p style="color:#64748b; font-size:13px;">This code expires in 10 minutes. If you didn't request this, you can ignore this email.</p>
+        </div>
+      `,
+    }),
   });
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => "");
+    throw new Error(`Resend API request failed (${response.status}): ${body}`);
+  }
 }
