@@ -1,4 +1,4 @@
-import { parseDMY, formatDMY, isWithinLastDays } from "./dateUtils";
+import { parseDMY, formatDMY, isWithinLastDays, isSunday, isWithinDateRange, parseISODate } from "./dateUtils";
 
 /**
  * @typedef {import('../types').AttendanceRecord} AttendanceRecord
@@ -45,11 +45,29 @@ function clampPercentage(value) {
   return Math.min(100, Math.max(0, value));
 }
 
+/**
+ * True if `date` is the fixed weekly off (Sunday) or covered by an
+ * admin-added holiday - a single date, a semester-break date range, or a
+ * same-day "mark today as holiday" override (also stored as a single date).
+ * On these days, students are never marked absent for not scanning.
+ * @param {Date} date
+ * @param {import('../services/settingsService').Holiday[]} holidays
+ */
+export function isNonWorkingDay(date, holidays = []) {
+  if (isSunday(date)) return true;
+
+  return holidays.some((h) =>
+    h.type === "range"
+      ? isWithinDateRange(date, parseISODate(h.startDate), parseISODate(h.endDate))
+      : formatDMY(date) === formatDMY(parseISODate(h.date))
+  );
+}
+
 // ======================================================
 // Dashboard Statistics
 // ======================================================
 
-export function computeTodayStats(students, todaysRecords) {
+export function computeTodayStats(students, todaysRecords, referenceDate = new Date(), holidays = []) {
 
   const totalStudents = students.length;
 
@@ -63,9 +81,12 @@ export function computeTodayStats(students, todaysRecords) {
     );
   }
 
+  const isHoliday = isNonWorkingDay(referenceDate, holidays);
+
   // Absent can never go negative, even when present temporarily exceeds
-  // the registered headcount due to a data inconsistency.
-  const absentToday = Math.max(0, totalStudents - presentToday);
+  // the registered headcount due to a data inconsistency. On a holiday/
+  // weekly-off day, a missed scan is never counted as an absence.
+  const absentToday = isHoliday ? 0 : Math.max(0, totalStudents - presentToday);
 
   // Percentage is always clamped to [0, 100] and rounded to 2 decimals,
   // regardless of any upstream data inconsistency.
@@ -132,7 +153,9 @@ export function computeTodayStats(students, todaysRecords) {
 
     attendancePercentage,
 
-    averageWorkingHours: avgWorkingHours
+    averageWorkingHours: avgWorkingHours,
+
+    isHoliday,
 
   };
 
@@ -222,7 +245,8 @@ export function dailyAttendanceSeries(
   students,
   records,
   days = 7,
-  referenceDate = new Date()
+  referenceDate = new Date(),
+  holidays = []
 ) {
 
   const totalStudents = students.length;
@@ -255,6 +279,8 @@ export function dailyAttendanceSeries(
       else inside++;
     });
 
+    const isHoliday = isNonWorkingDay(date, holidays);
+
     series.push({
 
       date: dateStr,
@@ -266,11 +292,13 @@ export function dailyAttendanceSeries(
 
       present,
 
-      absent: Math.max(0, totalStudents - present),
+      absent: isHoliday ? 0 : Math.max(0, totalStudents - present),
 
       inside,
 
       completed,
+
+      isHoliday,
 
     });
 

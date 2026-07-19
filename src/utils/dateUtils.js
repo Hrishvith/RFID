@@ -44,6 +44,33 @@ export function isSameDay(a, b) {
   );
 }
 
+/** Sunday is the institute's fixed weekly off. */
+export function isSunday(date) {
+  return date.getDay() === 0;
+}
+
+/** Inclusive range check, ignoring time-of-day on all three dates. */
+export function isWithinDateRange(date, start, end) {
+  const d = new Date(date).setHours(0, 0, 0, 0);
+  const s = new Date(start).setHours(0, 0, 0, 0);
+  const e = new Date(end).setHours(0, 0, 0, 0);
+  return d >= s && d <= e;
+}
+
+/** @returns {string} "YYYY-MM-DD", the format <input type="date"> uses. */
+export function toISODate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+/** Parses "YYYY-MM-DD" as a local date (avoids the UTC-midnight shift new Date(str) does). */
+export function parseISODate(dateStr) {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
 export function isWithinLastDays(date, days, referenceDate = new Date()) {
   const refMidnight = new Date(referenceDate).setHours(0, 0, 0, 0);
   const dateMidnight = new Date(date).setHours(0, 0, 0, 0);

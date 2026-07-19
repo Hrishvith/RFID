@@ -1,5 +1,6 @@
 import { getStudents } from "./studentService";
 import { getAttendance } from "./attendanceService";
+import { getHolidays } from "./settingsService";
 import {
   computeTodayStats,
   recordsForDate,
@@ -16,6 +17,8 @@ export async function getDashboardSummary(referenceDate = new Date()) {
 
   const attendance = await getAttendance();
 
+  const holidays = await getHolidays();
+
   const todaysRecords = recordsForDate(attendance, referenceDate);
 
   return {
@@ -28,14 +31,17 @@ export async function getDashboardSummary(referenceDate = new Date()) {
 
     stats: computeTodayStats(
       students,
-      todaysRecords
+      todaysRecords,
+      referenceDate,
+      holidays
     ),
 
     weekly: dailyAttendanceSeries(
       students,
       attendance,
       7,
-      referenceDate
+      referenceDate,
+      holidays
     ),
 
   };
@@ -48,13 +54,16 @@ export async function getReportData(referenceDate = new Date()) {
 
   const attendance = await getAttendance();
 
+  const holidays = await getHolidays();
+
   return {
 
     daily: dailyAttendanceSeries(
       students,
       attendance,
       7,
-      referenceDate
+      referenceDate,
+      holidays
     ),
 
     monthly: monthlyAttendanceSeries(

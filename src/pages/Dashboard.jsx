@@ -1,4 +1,4 @@
-import { Users, UserCheck, UserX, Percent, Calendar, Clock, AlertTriangle } from "lucide-react";
+import { Users, UserCheck, UserX, Percent, Calendar, Clock, AlertTriangle, CalendarOff } from "lucide-react";
 import { Header } from "../components/layout/Header";
 import { StatCard } from "../components/dashboard/StatCard";
 import { RecentScans } from "../components/dashboard/RecentScans";
@@ -51,6 +51,12 @@ export default function Dashboard() {
         <DashboardSkeleton />
       ) : (
         <div className="space-y-6">
+          {data.stats.isHoliday && (
+            <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-medium text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400">
+              <CalendarOff className="h-4 w-4" /> Today is a holiday — attendance is not being marked absent.
+            </div>
+          )}
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard
               index={0}

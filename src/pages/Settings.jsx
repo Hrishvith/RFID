@@ -8,6 +8,7 @@ import { Select } from "../components/ui/select";
 import { Button } from "../components/ui/button";
 import { ProfileCard } from "../components/common/ProfileCard";
 import { AttendanceSettingsCard } from "../components/settings/AttendanceSettingsCard";
+import { HolidaySettingsCard } from "../components/settings/HolidaySettingsCard";
 import { Skeleton } from "../components/ui/skeleton";
 import { useAsync } from "../hooks/useAsync";
 import { useAuth } from "../hooks/useAuth";
@@ -140,6 +141,7 @@ export default function Settings() {
           </form>
 
           {isAdmin && <AttendanceSettingsCard />}
+          {isAdmin && <HolidaySettingsCard />}
         </div>
       )}
     </div>
